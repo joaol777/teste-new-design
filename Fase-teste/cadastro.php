@@ -1,9 +1,10 @@
 <?php
 require_once "back/conexao.php";
 $gmail = ""; 
+$form = []; // Inicializa o array $form
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // pegaos dados do formulário
+    // pega os dados do formulário
     $nome = trim($_POST["usuNome"]);
     $email = trim($_POST["usuEmail"]);
     $senha = trim($_POST["usuSenha"]);
@@ -17,23 +18,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-       $gmail = "Gmail ja cadastrado";
-      
+        $gmail = "Gmail já cadastrado";
     } else {
+        // Processa o upload da imagem
+        $imagemNome = null;
+        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
+            $imagemTemp = $_FILES['imagem']['tmp_name'];
+            $imagemNome = basename($_FILES['imagem']['name']);
+            $imagemDestino = __DIR__ . '/poster/img/img-perfil/' . $imagemNome;
+
+            if (!move_uploaded_file($imagemTemp, $imagemDestino)) {
+                echo "<div class='error'>Falha ao enviar a imagem.</div>";
+            }
+        }
+
         // Insere os dados no banco de dados
-        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro) 
-                VALUES (:nome, :email, :senha, :dataNascimento, NOW())";
+        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro, usuImagem) 
+                VALUES (:nome, :email, :senha, :dataNascimento, NOW(), :imagem)";
         $stmt = $conexao->prepare($sql);
 
         // Faz o bind dos valores
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':senha', $senha, PDO::PARAM_STR); // Aqui você pode usar hash de senha se quiser
+        $stmt->bindParam(':senha', $senha, PDO::PARAM_STR);
         $stmt->bindParam(':dataNascimento', $dataNascimento, PDO::PARAM_STR);
+        $stmt->bindParam(':imagem', $imagemNome, PDO::PARAM_STR); // Armazena o nome da imagem
 
         if ($stmt->execute()) {
             echo "Cadastro realizado com sucesso!";
-            header("Location: index.php"); // Redireciona para a página de login
+            header("Location: index.php");
             exit;
         } else {
             echo "Erro ao cadastrar!";
@@ -42,20 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/style.css">
   <link href="https://fonts.cdnfonts.com/css/labor-union" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/medula-one" rel="stylesheet">
   <title>StudyBuddy - Cadastro</title>
 </head>
-
 <body>
   <div class="container">
     <div class="formImage">
@@ -63,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <div class="form">
-      <form method="post" action="">
+      <form method="post" action="" enctype="multipart/form-data"> <!-- Adicionado enctype para upload -->
         <div class="title">
           <h1>Cadastra-se</h1>
         </div>
@@ -71,33 +82,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="inputGroup">
           <div class="inputBox">
             <label for="nome">Nome de Usuário:</label>
-
-            <input id="nome" type="text" placeholder="Digite seu Nome de Usuário" name="usuNome" size="40"
-              required></input>
+            <input id="nome" type="text" placeholder="Digite seu Nome de Usuário" name="usuNome" size="40" required>
           </div>
 
           <div class="inputBox">
             <label for="email">E-mail:</label>
-
-            <input id="email" type="email" placeholder="Digite seu E-mail" name="usuEmail" size="40" required></input>
+            <input id="email" type="email" placeholder="Digite seu E-mail" name="usuEmail" size="40" required>
           </div>
 
           <div class="inputBox">
             <label for="senha">Senha:</label>
-
-            <input id="senha" type="password" placeholder="Digite sua Senha" name="usuSenha" size="40"
-              required></input>
+            <input id="senha" type="password" placeholder="Digite sua Senha" name="usuSenha" size="40" required>
           </div>
 
           <div class="inputBox">
             <label for="dataNascimento">Data de nascimento:</label>
-            <input id="dataNascimento" type="date" size="40" name="usuDataNascimento" required></input>
+            <input id="dataNascimento" type="date" size="40" name="usuDataNascimento" required>
           </div>
 
+          <div class="inputBox">
+            <label for="imagem">Imagem</label>
+            <input type="file" name="imagem" id="imagem" required> <!-- Tornar obrigatório -->
+          </div>
         </div>
-        <?php
-        echo $gmail
-        ?>
+        <?php echo $gmail; ?>
         <div class="py-1">
           <div class="loginButton">
             <button><a href="index.php">Já possui conta? Entre</a></button>

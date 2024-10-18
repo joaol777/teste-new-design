@@ -3,6 +3,9 @@ session_start();
 require_once 'system/config.php';
 require_once 'system/database.php';
 
+ $_SESSION["usoNome"];
+
+
 // Verifica se o ID está definido certinho
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header('Location: index.php');
@@ -191,7 +194,7 @@ if ($post) {
                     <input type="hidden" name="resAutor" value="<?php echo htmlspecialchars($_SESSION['username']); ?>">
                     <p>
                         <label for="resConteudo">Resposta:</label><br>
-                        <textarea name="resConteudo" id="resConteudo" rows="5" required></textarea>
+                        <textarea name="resConteudo" id="resConteudo" rows="5" cols="50" required></textarea>
                     </p>
                     <p>
                         <button type="submit" class="btn btn-primary">Enviar Resposta</button>

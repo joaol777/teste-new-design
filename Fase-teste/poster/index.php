@@ -95,13 +95,31 @@
                 session_start();
                 require_once 'system/config.php';
                 require_once 'system/database.php';
+                require_once "../back/conexao.php";
+                /////////////////////////////////////////////////////////////
+                $usuGmail = $_SESSION['username'];
+                $conexao = novaConexao();
+
+                $sql = "SELECT * FROM tblUsuario WHERE usuEmail LIKE '$usuGmail'";
+                $stmt = $conexao->prepare($sql);
+                $stmt->execute();
+                
+                // Armazena todos os resultados em uma variável
+                $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Exibir os resultados
+                foreach ($resultados as $usuario) {
+                 $usuNome =  $usuario['usuNome'];
+                 $usuNascimento =  $usuario['usuDataNascimento']; 
+                 $usuImagem = $usuario['usuImagem'];
+                }
 
                 if (isset($_SESSION['username'])) {
                     echo '<p class="text-light">Olá, ' . $_SESSION['username'] . '!</p>';
                 } else {
                     echo '<p class="text-light">Usuário não logado.</p>';
                 }
-
+                //////////////////////////////////////////////////////////
                 $posts = DBRead('posts', "WHERE status = 1 ORDER BY data DESC");
 
                 if (!$posts):
