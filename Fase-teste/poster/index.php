@@ -1,3 +1,45 @@
+<?php
+session_start(); // Sessão deve ser iniciada antes de qualquer saída HTML
+
+require_once 'system/config.php';
+require_once 'system/database.php';
+require_once '../back/conexao.php';
+
+if (!isset($_SESSION['username'])) {
+    // Caso o usuário não esteja logado, redireciona para a página de login
+    header("Location: ../index.php");
+    exit;
+}
+
+$usuGmail = $_SESSION['username'];
+
+try {
+    // Estabelece a conexão com o banco de dados
+    $conexao = novaConexao();
+    
+    // Consulta segura usando parâmetros preparados
+    $sql = "SELECT * FROM tblUsuario WHERE usuEmail = :email";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bindParam(':email', $usuGmail, PDO::PARAM_STR);
+    $stmt->execute();
+
+    // Busca os dados do usuário
+    if ($stmt->rowCount() > 0) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $usuNome = $usuario['usuNome'];
+        $usuNascimento = $usuario['usuDataNascimento'];
+        $usuImagem = $usuario['usuImagem'];
+    } else {
+        echo '<p class="text-light">Usuário não encontrado.</p>';
+        exit;
+    }
+} catch (PDOException $e) {
+    // Exibe uma mensagem de erro se a conexão falhar
+    die("Erro ao conectar ao banco de dados: " . $e->getMessage());
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +50,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Estilizando a barra lateral para ficar fixa */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100%;
             width: 200px;
-            background-color: #343a40; /* Cor da barra lateral */
+            background-color: #343a40;
             padding-top: 20px;
             overflow-x: hidden;
         }
 
-        /* Garantindo que o conteúdo principal não sobreponha a barra lateral */
         .content {
             margin-left: 220px;
             padding: 10px;
         }
 
-        /* Rodapé fixo */
         footer {
             position: fixed;
             bottom: 0;
@@ -38,9 +77,8 @@
             padding: 10px;
         }
 
-        /* Para garantir que o conteúdo não fique escondido atrás do rodapé */
         .content-footer-space {
-            margin-bottom: 80px; /* Altura do rodapé */
+            margin-bottom: 80px;
         }
     </style>
 </head>
@@ -58,7 +96,26 @@
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
             </form>
-            <a href="#"><img src="../imgs/Profile-PNG.png" width="40" height="40" class="rounded-circle" alt="profile"></a>
+            
+            <?php
+            if (isset($usuNome)) {
+                echo '<p class="text-light">Olá, ' . htmlspecialchars($usuNome) . '!</p>';
+            } else {
+                echo '<p class="text-light">Usuário não logado.</p>';
+            }
+            ?>
+
+            <?php
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Verifica se a imagem existe
+            $imagemPath = "imgd/img-perfil/" . htmlspecialchars($usuImagem);
+            if (file_exists($imagemPath)) {
+                echo '<a href="#"><img src="' . $imagemPath . '" width="40" height="40" class="rounded-circle" alt="profile"></a>';
+            } else {
+                echo '<a href="#"><img src="img/defalt.png" width="40" height="40" class="rounded-circle" alt="default profile"></a>';
+            }
+          //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ?>
         </div>
     </div>
 </nav>
@@ -66,9 +123,9 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <nav class="col-md-2 sidebar py-4" style="position: fixed; height: 100%; background-color: #343a40;">
+        <nav class="col-md-2 sidebar py-4">
             <ul class="nav flex-column">
-            <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link text-light" href="index.php"><i class="bi bi-house-door"></i> studybuddy</a>
                 </li>
                 <li class="nav-item">
@@ -88,38 +145,12 @@
                 </li>
             </ul>
         </nav>
+
         <!-- Conteúdo principal -->
         <main class="col-md-10 content">
             <div class="container mt-3">
                 <?php
-                session_start();
-                require_once 'system/config.php';
-                require_once 'system/database.php';
-                require_once "../back/conexao.php";
-                /////////////////////////////////////////////////////////////
-                $usuGmail = $_SESSION['username'];
-                $conexao = novaConexao();
-
-                $sql = "SELECT * FROM tblUsuario WHERE usuEmail LIKE '$usuGmail'";
-                $stmt = $conexao->prepare($sql);
-                $stmt->execute();
-                
-                // Armazena todos os resultados em uma variável
-                $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
-                // Exibir os resultados
-                foreach ($resultados as $usuario) {
-                 $usuNome =  $usuario['usuNome'];
-                 $usuNascimento =  $usuario['usuDataNascimento']; 
-                 $usuImagem = $usuario['usuImagem'];
-                }
-
-                if (isset($_SESSION['username'])) {
-                    echo '<p class="text-light">Olá, ' . $_SESSION['username'] . '!</p>';
-                } else {
-                    echo '<p class="text-light">Usuário não logado.</p>';
-                }
-                //////////////////////////////////////////////////////////
+                // Supondo que você tenha uma função DBRead para buscar os posts
                 $posts = DBRead('posts', "WHERE status = 1 ORDER BY data DESC");
 
                 if (!$posts):
@@ -127,14 +158,13 @@
                     <div class="post-card bg-secondary text-light p-3 mb-4 rounded">
                         <p>Nenhuma postagem encontrada!</p>
                     </div>
-                <?php
-                else:
+                <?php else:
                     foreach ($posts as $post):
                 ?>
                     <div class="post-card bg-secondary text-light p-3 mb-4 rounded">
                         <h5>
                             <a href="exibe.php?id=<?php echo $post['id']; ?>" class="text-light">
-                                <?php echo $post['titulo']; ?>
+                                <?php echo htmlspecialchars($post['titulo']); ?>
                             </a>
                         </h5>
                         <p class="mb-1"><?php echo strip_tags($post['conteudo']); ?></p>
@@ -143,8 +173,7 @@
                             <button class="btn btn-sm btn-outline-light" onclick="window.location.href='exibe.php?id=<?php echo $post['id']; ?>'; return false;"><i class="bi bi-chat-left"></i> Comentar</button>
                         </div>
                     </div>
-                <?php
-                    endforeach;
+                <?php endforeach;
                 endif;
                 ?>
             </div>

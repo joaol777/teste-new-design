@@ -3,8 +3,6 @@ session_start();
 require_once 'system/config.php';
 require_once 'system/database.php';
 
- $_SESSION["usoNome"];
-
 
 // Verifica se o ID está definido certinho
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -199,6 +197,7 @@ if ($post) {
                     <p>
                         <button type="submit" class="btn btn-primary">Enviar Resposta</button>
                     </p>
+                    <br> <br> <br> <br>
                 </form>
 
             <?php else: ?>
