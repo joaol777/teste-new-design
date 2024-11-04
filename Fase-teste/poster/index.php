@@ -108,11 +108,11 @@ try {
             <?php
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Verifica se a imagem existe
-            $imagemPath = "imgd/img-perfil/" . htmlspecialchars($usuImagem);
+            $imagemPath = "img/img-perfil/" . htmlspecialchars($usuImagem);
             if (file_exists($imagemPath)) {
-                echo '<a href="#"><img src="' . $imagemPath . '" width="40" height="40" class="rounded-circle" alt="profile"></a>';
+                echo '<a href="pages/perfil.php"><img src="' . $imagemPath . '" width="40" height="40" class="rounded-circle" alt="profile"></a>';
             } else {
-                echo '<a href="#"><img src="img/defalt.png" width="40" height="40" class="rounded-circle" alt="default profile"></a>';
+                echo '<a href="pages/perfil.php"><img src="img/defalt.png" width="40" height="40" class="rounded-circle" alt="default profile"></a>';
             }
           //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ?>
