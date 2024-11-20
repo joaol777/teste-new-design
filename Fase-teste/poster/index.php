@@ -137,12 +137,25 @@ try {
                 <li class="nav-item">
                     <a class="nav-link text-light" href="#"><i class="bi bi-search"></i> Explore</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" ><i ></i> </a>
+                </li>
+                <li class="nav-item">
+                    <text class="nav-link text-light" ><i ></i> Materias:</text>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="pages/psicologia.php"><i ></i> Psicologia</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="pages/matematica.php"><i ></i> matematica</a>
+                </li>
                 <li class="nav-item mt-4">
                     <button class="btn btn-outline-light w-100" onclick="window.location.href='painel/add-post.php'; return false;">Criar Postagem</button>
                 </li>
                 <li class="nav-item mt-2">
                     <button class="btn btn-outline-light w-100" onclick="window.location.href='painel/edit-post.php'; return false;">Editar Postagem</button>
                 </li>
+
             </ul>
         </nav>
 

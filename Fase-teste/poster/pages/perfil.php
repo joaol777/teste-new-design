@@ -126,7 +126,7 @@ try {
 										<div class="ContainerDescriptionArea">
 										<?php
 									
-									 echo '<textarea class="descriptionArea" class="swal2-input" rows="3" cols="63" name="usuDescrição">' .  htmlspecialchars($usuDescricao) .'</textarea>';
+									 echo '<text class="descriptionArea" class="swal2-input" rows="3" cols="63" name="usuDescrição">' .  htmlspecialchars($usuDescricao) .'</text>';
 									   ?>												
 									</div>
 								</div>
@@ -136,6 +136,38 @@ try {
 										<h6 class="subtitleHistoric">Histórico</h6>
 									</div>
 									<div class="cardHistoric overflow-y-auto">
+									<main class="col-md-10 content">
+            <div class="container mt-3">
+                <?php
+                // Supondo que você tenha uma função DBRead para buscar os posts
+                $posts = DBRead('posts', "WHERE status = 1 AND autor = '{$usuGmail}' ORDER BY data DESC");
+
+                if (!$posts):
+                ?>
+                    <div class="post-card bg-secondary text-light p-3 mb-4 rounded">
+                        <p>Nenhuma postagem encontrada!</p>
+                    </div>
+                <?php else:
+                    foreach ($posts as $post):
+                ?>
+                    <div class="post-card bg-secondary text-light p-3 mb-4 rounded">
+                        <h5>
+                            <a href="exibe.php?id=<?php echo $post['id']; ?>" class="text-light">
+                                <?php echo htmlspecialchars($post['titulo']); ?>
+                            </a>
+                        </h5>
+                        <p class="mb-1"><?php echo strip_tags($post['conteudo']); ?></p>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-outline-light me-2"><i class="bi bi-hand-thumbs-up"></i> Curtir</button>
+                            <button class="btn btn-sm btn-outline-light" onclick="window.location.href='../exibe.php?id=<?php echo $post['id']; ?>'; return false;"><i class="bi bi-chat-left"></i> Comentar</button>
+                        </div>
+                    </div>
+                <?php endforeach;
+                endif;
+                ?>
+            </div>
+            <div class="content-footer-space"></div>
+        </main>
 										<div>
 
 

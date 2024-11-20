@@ -3,15 +3,22 @@ require_once "back/conexao.php";
 $gmail = ""; 
 $form = []; // Inicializa o array $form
 
+// Conexão com o banco de dados para buscar as tags
+$conexao = novaConexao();
+$sqlTags = "SELECT tagNome FROM tbl_Tags";
+$stmtTags = $conexao->prepare($sqlTags);
+$stmtTags->execute();
+$tags = $stmtTags->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // pega os dados do formulário
     $nome = trim($_POST["usuNome"]);
     $email = trim($_POST["usuEmail"]);
     $senha = trim($_POST["usuSenha"]);
     $dataNascimento = $_POST["usuDataNascimento"];
+    $categoria = $_POST["categoria"]; // Obtém a categoria selecionada
 
     // Verifica se o e-mail já está cadastrado no banco
-    $conexao = novaConexao();
     $sqlVerifica = "SELECT * FROM tblUsuario WHERE usuEmail = :email";
     $stmt = $conexao->prepare($sqlVerifica);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -32,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        // Insere os dados no banco de dados
-        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro, usuImagem) 
-                VALUES (:nome, :email, :senha, :dataNascimento, NOW(), :imagem)";
+        // Insere os dados no banco de dados, incluindo a categoria
+        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro, usuImagem, categoria) 
+                VALUES (:nome, :email, :senha, :dataNascimento, NOW(), :imagem, :categoria)";
         $stmt = $conexao->prepare($sql);
 
         // Faz o bind dos valores
@@ -42,7 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':senha', $senha, PDO::PARAM_STR);
         $stmt->bindParam(':dataNascimento', $dataNascimento, PDO::PARAM_STR);
-        $stmt->bindParam(':imagem', $imagemNome, PDO::PARAM_STR); // Armazena o nome da imagem
+        $stmt->bindParam(':imagem', $imagemNome, PDO::PARAM_STR);
+        $stmt->bindParam(':categoria', $categoria, PDO::PARAM_STR); // Salva a categoria
 
         if ($stmt->execute()) {
             echo "Cadastro realizado com sucesso!";
@@ -104,6 +112,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="imagem">Imagem</label>
             <input type="file" name="imagem" id="imagem" required> <!-- Tornar obrigatório -->
           </div>
+          <div class="inputBox">
+  <label for="categoria">Categoria:</label>
+  <select id="categoria" name="categoria" required>
+    <?php foreach ($tags as $tag): ?>
+      <option value="<?php echo htmlspecialchars($tag['tagNome']); ?>">
+        <?php echo htmlspecialchars($tag['tagNome']); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+</div>
+
+
         </div>
         <?php echo $gmail; ?>
         <div class="py-1">

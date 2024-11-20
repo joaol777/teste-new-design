@@ -1,8 +1,14 @@
 <?php
 require '../system/config.php';
 require '../system/database.php';
+require_once '../../back/conexao.php';
 session_start();
 $nome_uso = $_SESSION['username'] ?? 'Anônimo'; // Verificação de sessão
+
+// Consulta para obter as categorias do banco de dados
+$tags = DBRead('Tags', '', 'idTag, tagNome');
+ // Nome e colunas corretos
+
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +18,108 @@ $nome_uso = $_SESSION['username'] ?? 'Anônimo'; // Verificação de sessão
     <title>Adicionar Postagem</title>
     <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
     <script>tinymce.init({selector:'textarea'});</script>
-    <style>
+</head>
+
+<body>
+
+    <h2>Adicionar Postagem | <a href="../index.php" title="Voltar">Voltar</a></h2>
+    <hr>
+
+    <?php
+    if (isset($_POST['publicar'])) {
+        $form['titulo']   = DBEscape(strip_tags(trim($_POST['titulo'])));
+        $form['autor']    = DBEscape(strip_tags(trim($_POST['autor'])));
+        $form['status']   = DBEscape(strip_tags(trim($_POST['status'])));
+        $form['data']     = date('Y-m-d H:i:s');
+        $form['conteudo'] = str_replace('\r\n', "\n", DBEscape(trim($_POST['conteudo'])));
+        $form['tag']      = DBEscape(trim($_POST['categoria'])); // Insere o ID da categoria no campo tag
+
+        if (empty($form['titulo'])) {
+            echo "<div class='error'>Preencha o campo Título.</div>";
+        } elseif (empty($form['autor'])) {
+            echo "<div class='error'>Preencha o campo Autor.</div>";
+        } elseif (!isset($form['status']) || $form['status'] === '') {
+            echo "<div class='error'>Preencha o campo Status.</div>";
+        } elseif (empty($form['conteudo'])) {
+            echo "<div class='error'>Preencha o campo Conteúdo.</div>";
+        } elseif (empty($form['tag'])) {
+            echo "<div class='error'>Selecione uma categoria.</div>";
+        } else {
+            if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
+                $imagemTemp = $_FILES['imagem']['tmp_name'];
+                $imagemNome = basename($_FILES['imagem']['name']);
+                $imagemDestino = __DIR__ . '/../img/img-post/' . $imagemNome;
+
+                if (move_uploaded_file($imagemTemp, $imagemDestino)) {
+                    $form['imagem'] = $imagemNome;
+                } else {
+                    echo "<div class='error'>Falha ao enviar a imagem.</div>";
+                    $form['imagem'] = ''; 
+                }
+            } else {
+                $form['imagem'] = ''; 
+            }
+
+            if (DBCreate('posts', $form)) {
+                echo "<div class='success'>Sua postagem foi enviada com sucesso!</div>";
+            } else {
+                echo "<div class='error'>Desculpe, ocorreu um erro ao enviar sua postagem...</div>";
+            }
+        }
+
+        echo '<hr>';
+    }
+    ?>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        <p>
+            <label for="titulo">Título</label>
+            <input type="text" name="titulo" id="titulo">
+        </p>
+
+        <p>
+            <input type="hidden" name="autor" value="<?php echo htmlspecialchars($nome_uso); ?>">
+        </p>
+
+        <p>
+            <label for="status">Status</label>
+            <select name="status" id="status">
+                <option value="1" selected>Ativo</option>
+                <option value="0">Inativo</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="conteudo">Conteúdo</label>
+            <textarea name="conteudo" id="conteudo" cols="50" rows="15"></textarea>
+        </p>
+
+        <p>
+            <label for="imagem">Imagem</label>
+            <input type="file" name="imagem" id="imagem">
+        </p>
+
+        <div class="inputBox">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" name="categoria" required>
+                <?php foreach ($tags as $tag): ?>
+                    <option value="<?php echo htmlspecialchars($tag['idTag']); ?>">
+                        <?php echo htmlspecialchars($tag['tagNome']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <input type="submit" name="publicar" value="Publicar">
+    </form>
+
+</body>
+</html>
+
+
+
+
+<style>
         body {
             font-family: Arial, sans-serif;
             background-color: #000;
@@ -103,87 +210,3 @@ $nome_uso = $_SESSION['username'] ?? 'Anônimo'; // Verificação de sessão
             text-decoration: underline;
         }
     </style>
-</head>
-
-<body>
-
-    <h2>Adicionar Postagem | <a href="../index.php" title="Voltar">Voltar</a></h2>
-    <hr>
-
-    <?php
-    if(isset($_POST['publicar'])) {
-        $form['titulo']   = DBEscape(strip_tags(trim($_POST['titulo'])));
-        $form['autor']    = DBEscape(strip_tags(trim($_POST['autor'])));
-        $form['status']   = DBEscape(strip_tags(trim($_POST['status'])));
-        $form['data']     = date('Y-m-d H:i:s');
-        $form['conteudo'] = str_replace('\r\n', "\n", DBEscape(trim($_POST['conteudo'])));
-        $form = DBEscape($form);
-
-        if (empty($form['titulo'])) {
-            echo "<div class='error'>Preencha o campo Título.</div>";
-        } elseif (empty($form['autor'])) {
-            echo "<div class='error'>Preencha o campo Autor.</div>";
-        } elseif (!isset($form['status']) || $form['status'] === '') {
-            echo "<div class='error'>Preencha o campo Status.</div>";
-        } elseif (empty($form['conteudo'])) {
-            echo "<div class='error'>Preencha o campo Conteúdo.</div>";
-        } else {
-            if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
-                $imagemTemp = $_FILES['imagem']['tmp_name'];
-                $imagemNome = basename($_FILES['imagem']['name']);
-                $imagemDestino = __DIR__ . '/../img/img-post/' . $imagemNome;
-
-                if (move_uploaded_file($imagemTemp, $imagemDestino)) {
-                    $form['imagem'] = $imagemNome;
-                } else {
-                    echo "<div class='error'>Falha ao enviar a imagem.</div>";
-                    $form['imagem'] = ''; 
-                }
-            } else {
-                $form['imagem'] = ''; 
-            }
-
-            if (DBCreate('posts', $form)) {
-                echo "<div class='success'>Sua postagem foi enviada com sucesso!</div>";
-            } else {
-                echo "<div class='error'>Desculpe, ocorreu um erro ao enviar sua postagem...</div>";
-            }
-        }
-
-        echo '<hr>';
-    }
-    ?>
-
-    <form action="" method="post" enctype="multipart/form-data">
-        <p>
-            <label for="titulo">Título</label>
-            <input type="text" name="titulo" id="titulo">
-        </p>
-
-        <p>
-            <input type="hidden" name="autor" value="<?php echo htmlspecialchars($nome_uso); ?>">
-        </p>
-
-        <p>
-            <label for="status">Status</label>
-            <select name="status" id="status">
-                <option value="1" selected>Ativo</option>
-                <option value="0">Inativo</option>
-            </select>
-        </p>
-
-        <p>
-            <label for="conteudo">Conteúdo</label>
-            <textarea name="conteudo" id="conteudo" cols="50" rows="15"></textarea>
-        </p>
-
-        <p>
-            <label for="imagem">Imagem</label>
-            <input type="file" name="imagem" id="imagem">
-        </p>
-
-        <input type="submit" name="publicar" value="Publicar">
-    </form>
-
-</body>
-</html>
