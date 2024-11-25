@@ -1,0 +1,436 @@
+<?php
+    require_once 'system/config.php';
+    require_once 'system/database.php';
+
+    // Verificar se o ID está definido e não está vazio
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
+        header('Location: index.php');
+        exit;
+    }
+
+    // Escapar e sanitizar o ID
+    $id = DBEscape(strip_tags(trim($_GET['id'])));
+
+    // Buscar a postagem com o ID fornecido
+    $post = DBRead('posts', "WHERE id = '{$id}' LIMIT 1");
+
+    if ($post) {
+        $post = $post[0];
+        // Atualizar o contador de visitas
+        $upVisitas = array(
+            'visitas' => $post['visitas'] + 1
+        );
+        DBUpdate('posts', $upVisitas, "id = '{$id}'");
+    } else {
+        $post = null; // Definir $post como null se não houver postagem
+    }
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo (!$post) ? 'Erro 404!' : htmlspecialchars($post['titulo']); ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .post-content {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .error {
+            text-align: center;
+            font-size: 24px;
+            color: #d9534f;
+            margin-top: 50px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
+        }
+
+        .resposta {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .resposta p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <h1>
+        <?php echo (!$post) ? 'Erro 404!' : htmlspecialchars($post['titulo']); ?> | <a href="index.php">Voltar</a>
+    </h1>
+
+    <?php if ($post): ?>
+        <div class="post-meta">
+            por <b><?php echo htmlspecialchars($post['autor']); ?></b>
+            em <b><?php echo date('d/m/Y', strtotime($post['data'])) ?></b> |
+            Visitas <b><?php echo $post['visitas']; ?></b>
+            <div class="post-content">
+            <?php echo nl2br(htmlspecialchars($post['conteudo'])); ?>
+        </div>
+        </div>
+        
+        <div class="post-content">
+            <?php if (!empty($post['imagem'])): ?>
+                <img src="img/<?php echo htmlspecialchars($post['imagem']); ?>" alt="Imagem da postagem">
+            <?php endif; ?>
+            <?php echo nl2br(htmlspecialchars($post['conteudo'])); ?>
+        </div>
+
+        <hr>
+
+        <?php
+        // Supomos que $postId contém o ID do post atual
+        $postId = $_GET['id']; // Certifique-se de validar este valor adequadamente
+
+        // Ler respostas do banco de dados
+        $respostas = DBRead('Resposta', "WHERE resPostId = {$postId} ORDER BY resData ASC");
+
+        if ($respostas):
+            foreach ($respostas as $resposta):
+        ?>
+            <div class="resposta">
+                <p><strong><?php echo htmlspecialchars($resposta['resAutor']); ?></strong> em <?php echo date('d/m/Y H:i', strtotime($resposta['resData'])); ?></p>
+                <p><?php echo nl2br(htmlspecialchars($resposta['resConteudo'])); ?></p>
+                <hr>
+            </div>
+        <?php
+           endforeach;
+        else:
+            echo "<p>Sem respostas ainda. Seja o primeiro a responder!</p>";
+        endif;
+        ?>
+
+        <h3>Deixe uma Resposta</h3>
+        <form action="adicionar_resposta.php" method="post">
+            <input type="hidden" name="resPostId" value="<?php echo htmlspecialchars($postId); ?>">
+            <p>
+                <label for="resAutor">Seu Nome:</label><br>
+                <input type="text" name="resAutor" id="resAutor" required>
+            </p>
+            <p>
+                <label for="resConteudo">Resposta:</label><br>
+                <textarea name="resConteudo" id="resConteudo" rows="5" required></textarea>
+            </p>
+            <p>
+                <button type="submit">Enviar Resposta</button>
+            </p>
+        </form>
+
+    <?php else: ?>
+        <div class="error">Postagem não encontrada!</div>
+    <?php endif; ?>
+
+</body>
+</html>
+
+
+////////////////////////////////funcional//////////////////////////////////
+
+
+<?php
+    require_once 'system/config.php';
+    require_once 'system/database.php';
+
+    // Verificar se o ID está definido e não está vazio
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
+        header('Location: index.php');
+        exit;
+    }
+
+    // Escapar e sanitizar o ID
+    $id = DBEscape(strip_tags(trim($_GET['id'])));
+
+    // Buscar a postagem com o ID fornecido
+    $post = DBRead('posts', "WHERE id = '{$id}' LIMIT 1");
+
+    if ($post) {
+        $post = $post[0];
+        // Atualizar o contador de visitas
+        $upVisitas = array(
+            'visitas' => $post['visitas'] + 1
+        );
+        DBUpdate('posts', $upVisitas, "id = '{$id}'");
+    } else {
+        $post = null; // Definir $post como null se não houver postagem
+    }
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo (!$post) ? 'Erro 404!' : htmlspecialchars($post['titulo']); ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .post-content {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+           
+            margin: 0 auto;
+        }
+
+        .error {
+            text-align: center;
+            font-size: 24px;
+            color: #d9534f;
+            margin-top: 50px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <h1>
+        <?php echo (!$post) ? 'Erro 404!' : htmlspecialchars($post['titulo']); ?> | <a href="index.php">Voltar</a>
+    </h1>
+
+    <?php if ($post): ?>
+        <div class="post-meta">
+            por <b><?php echo htmlspecialchars($post['autor']); ?></b>
+            em <b><?php echo date('d/m/Y', strtotime($post['data'])) ?></b> |
+            Visitas <b><?php echo $post['visitas']; ?></b>
+        <div class="post-content">
+            <?php echo nl2br(htmlspecialchars($post['conteudo'])); ?>
+        </div>
+        </div>
+        
+        <hr>
+        
+       
+    <?php else: ?>
+        <div class="error">Postagem não encontrada!</div>
+    <?php endif; ?>
+
+    <?php
+// Supomos que $postId contém o ID do post atual
+$postId = $_GET['id']; // Certifique-se de validar este valor adequadamente
+
+// Ler respostas do banco de dados
+$respostas = DBRead('Resposta', "WHERE resPostId = {$postId} ORDER BY resData ASC");
+
+if ($respostas):
+    foreach ($respostas as $resposta):
+?>
+    <div class="resposta">
+        <p><strong><?php echo htmlspecialchars($resposta['resAutor']); ?></strong> em <?php echo date('d/m/Y H:i', strtotime($resposta['resData'])); ?></p>
+        <p><?php echo nl2br(htmlspecialchars($resposta['resConteudo'])); ?></p>
+        <hr>
+    </div>
+<?php
+
+   endforeach;
+else:
+    echo "<p>Sem respostas ainda. Seja o primeiro a responder!</p>";
+endif;
+?>
+
+<h3>Deixe uma Resposta</h3>
+<form action="adicionar_resposta.php" method="post">
+    <input type="hidden" name="resPostId" value="<?php echo $postId; ?>">
+    <p>
+        <label for="resAutor">Seu Nome:</label><br>
+        <input type="text" name="resAutor" id="resAutor" required>
+    </p>
+    <p>
+        <label for="resConteudo">Resposta:</label><br>
+        <textarea name="resConteudo" id="resConteudo" rows="5" required></textarea>
+    </p>
+    <p>
+        <button type="submit">Enviar Resposta</button>
+    </p>
+</form>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #444;
+            text-align: center;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"], form textarea, form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        form input[type="submit"] {
+            background: #28a745;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        form input[type="submit"]:hover {
+            background: #218838;
+        }
+
+        .error {
+            color: #d9534f;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .success {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }

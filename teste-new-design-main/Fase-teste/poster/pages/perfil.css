@@ -1,0 +1,426 @@
+@import url('https://fonts.cdnfonts.com/css/falling-sky');
+
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.exitIcon {
+	font-size: 30px;
+	align-items: center;
+	color: #FFFFFF;
+}
+
+.navbar-light {
+   background-color: #343A40;
+   border: none;
+   border-width:0;
+}
+
+.navbar-brand {
+	color: #FFFFFF;
+	font-size: 30px;
+}
+
+nav {
+		height: 5rem;
+	}
+
+body {
+width: 100%;
+background-color: #212529;
+}
+
+.MainContainer {
+width: 100%;
+height: 85vh;
+background-color: #212529;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.card {
+margin: 1px;
+padding: 30px;
+width: 85vw;
+height: 75vh;
+background-color: #6C757D;
+color: #090D0A;
+border-radius: 5px;
+}
+
+.PerfilImage {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.PerfilImage img {
+	max-width: 20rem;
+}
+
+.titlePerfil {
+justify-items: center;
+font-size: 45px;
+font-family: 'Medula One';
+justify-content: center;
+align-items: center;
+color: #f2edeb;
+}
+
+.PerfilIntroductionContainer {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100%;
+min-height: 65vh;
+}
+
+.PerfilInformationContainer {
+display: flex;
+justify-content: center;
+align-items: start;
+min-height: 65vh;
+width: 100%;
+margin: 0;
+padding: 0;
+}
+
+.EditButton button{
+width: 100%;
+border: 1px solid black;
+margin-top: 20px;
+background-color: #212529;
+border-radius: 5px;
+cursor: pointer;
+font-size: 20px;
+cursor: pointer;
+text-align: center;
+margin: 0;
+padding: 0;
+}
+
+.LogoutButton button {
+width: 100%;
+border: 1px solid black;
+margin-top: 10px;
+background-color: #212529;
+border-radius: 5px;
+cursor: pointer;
+font-size: 20px;
+cursor: pointer;
+text-align: center;
+margin: 0;
+padding: 0;
+color: #FFFFFF;
+}
+
+.EditButton a {
+text-decoration: none;
+color: #FFFFFF;
+font-size: 25px;
+font-family: Arial, Helvetica, sans-serif;
+margin-bottom: 30px;
+}
+
+.LogoutButton a {
+	text-decoration: none;
+	
+	font-size: 25px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-bottom: 30px;
+	}
+
+.Information {
+line-height: 15.0px;
+margin-top: 20px;
+}
+
+.PerfilImage {
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.PerfilImage img {
+width: 20rem;
+}
+
+.PerfilUsername {
+justify-content: center;
+text-align: left;
+font-size: 24px;
+font-family: Arial, Helvetica, sans-serif;
+font-weight: bold;
+}
+
+.PerfilEmail {
+justify-content: center;
+text-align: left;
+font-size: 20px;
+font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.PerfilBirthday {
+justify-content: center;
+text-align: left;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 20px;
+}
+
+.subtitleHistoric, .subtitleDescription {
+text-align: center;
+align-items: center;
+color: #FFFFFF;
+font-family: 'Falling Sky', sans-serif;  
+font-size: 30px;
+}
+
+.subtitleIntroduction {
+	text-align: center;
+	align-items: center;
+	color: #FFFFFF;
+	font-family: 'Falling Sky', sans-serif;  
+	font-size: 33px;
+}
+
+.cardDescription {
+border: 1px solid #2b3035;
+border-radius: 5px;
+margin-top: 10px;
+padding: 10px;
+display: flex;
+justify-content: center;
+max-width: 600px;
+}
+
+.cardHistoric {
+border: 1px solid #2b3035;
+border-radius: 5px;
+margin-top: 10px;
+padding: 10px;
+display: flex;
+justify-content: center;
+max-width: 600px;
+max-height: 240px;
+}
+
+.ContainerDescriptionArea{
+margin: 0;
+padding: 0;
+}
+
+.DescriptionContainer {
+display: block;
+margin: 0;
+padding: 0;
+}
+
+.HistoricoContainer {
+display: block;
+margin: 0;
+padding: 0;
+}
+
+textarea {
+	width: 100%;
+	height: 100%;
+}
+
+@media screen and (max-height: 102px) {
+	.EditButton{
+		margin-top: 0px;
+		margin-bottom: 20px;
+	}
+
+	.Information {
+		margin-top: 10px;
+		margin-bottom: 0px;
+	}
+
+	.PerfilImage{
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-height: 723px) {
+	.EditButton{
+		margin-top: 0px;
+		margin-bottom: 20px;
+	}
+
+	.Information {
+		margin-top: 10px;
+		margin-bottom: 0px;
+	}
+
+	.PerfilImage{
+		margin-bottom: 5px;
+	}
+	
+}
+
+@media screen and (max-width: 1256px){
+	.card {
+		width: 90%;
+		height: 85%;
+	}
+	
+	.PerfilIntroductionContainer {
+		height: 100%;
+	}
+	
+	.PerfilInformationContainer{
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1010px) {
+	.PerfilInformationContainer {
+		max-width: 80%;
+	}
+	
+	.PerfilIntroductionContainer {
+		max-width: 120%;
+		max-height: 100%;
+		width: auto;
+		display: flex;
+	}
+	
+	.PerfilBirthday, .PerfilEmail, .PerfilUsername {
+		flex-direction: column;
+		font-size: 22px;
+		display: flex;
+		text-justify: left;
+	}
+	
+	.PerfilImage {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.PerfilImage img{
+		max-width: 15rem;
+	}
+	
+	.subtitleDescription, .subtitleHistoric, .subtitleIntroduction {
+		font-size: 35px;
+	}
+	
+	.DescriptionContainer, .HistoricContainer{
+		width: 130%;
+	}	
+}
+
+@media screen and (max-width: 767px) {
+	.card {
+		height: 80%;
+	}
+	
+	.PerfilInformationContainer, .PerfilIntroductionContainer {
+		width: 100%;
+	}
+	
+	.ContainerDescriptionArea, .HistoricContainer {
+		max-width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	
+	.HistoricContainer {
+		overflow-y: auto;
+	}
+   
+	.subtitleDescription, .subtitleHistoric, .subtitleIntroduction {
+		font-size: 33px;
+		text-align: center;
+	}
+	
+	.PerfilBirthday, .PerfilEmail, .PerfilUsername {
+		font-size: 20px;
+		flex-direction: column;
+	}
+	
+	.PerfilImage {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.PerfilImage img {
+		max-width: 15rem;
+	}
+	
+	.HistoricContainer {
+		max-width: 130%;
+	}
+	
+	.cardHistoric {
+		width: 100%;
+	}
+
+	.EditButtonbutton, .LogoutButton button {
+		margin: 0;
+		font-size: 10px;
+	}
+	
+}
+
+@media screen and (max-width: 621px) {
+	.subtitleIntroduction {
+		font-size: 30x;
+	}
+}
+
+@media screen and (max-width: 575px) {
+	.card {
+		height: 52rem;
+		margin-top: 17rem;
+	}
+	
+	.PerfilInformationContainer {
+		max-width: 80%;	
+		display: flex;
+		margin: 0;
+		padding: 0;
+		justify-content: start;
+	}
+	
+	.PerfilIntroductionContainer {
+		max-width: 100%;
+		display: flex;
+		margin: 0;
+		padding: 0;
+		justify-content: start;
+	}
+	
+	 .ContainerDescriptionArea {
+		max-width: 100%;
+	}
+	
+	.cardDescription {
+		max-width: 100%;
+	}
+	
+	.cardHistoric, .HistoricContainer {
+		max-width: 130%;
+		overflow-y: auto;
+	}
+	
+	.subtitleDescription {
+		text-align: center;
+	}
+	
+	.EditButton, .LogoutButton {
+		width: 100%;
+	}
+	
+	.subtitleDescription, .subtitleHistoric, .subtitleIntroduction {
+		font-size: 35px;
+	}
+}

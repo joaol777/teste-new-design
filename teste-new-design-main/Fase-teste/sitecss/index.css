@@ -1,0 +1,57 @@
+.soft-brown {
+    background-color: #592D1D
+}
+
+.sidebar-color{
+    background-color: hsl(32, 100%, 24%)
+}
+
+.title{
+    color: rgba(255, 255, 255, 0.918);
+    font: bolder;
+    font-family: bree-serif;
+    font-size: xx-large;
+}
+
+.p-font{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2rem;
+}
+
+.nav-font{
+    text-align: center;
+    color: rgba(3, 3, 3, 0.918);
+    font-size: large;
+}
+
+.nav-font-2{
+    color: rgba(253, 252, 252, 0.918);
+    font-size: 2rem;
+}
+
+.src-50{
+    width: 50%;
+    border-radius: 50%;
+}
+
+.post-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+.post-card-header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+.post-card-body {
+    padding: 15px;
+}
+.post-card-footer {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+}
