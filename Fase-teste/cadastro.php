@@ -1,5 +1,6 @@
 <?php
 require_once "back/conexao.php";
+
 $gmail = ""; 
 $form = []; // Inicializa o array $form
 
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["usuEmail"]);
     $senha = trim($_POST["usuSenha"]);
     $dataNascimento = $_POST["usuDataNascimento"];
-    $categoria = $_POST["categoria"]; // Obtém a categoria selecionada
+    $descricao = trim($_POST["usuDescricao"]); // Nova descrição
 
     // Verifica se o e-mail já está cadastrado no banco
     $sqlVerifica = "SELECT * FROM tblUsuario WHERE usuEmail = :email";
@@ -39,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        // Insere os dados no banco de dados, incluindo a categoria
-        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro, usuImagem, categoria) 
-                VALUES (:nome, :email, :senha, :dataNascimento, NOW(), :imagem, :categoria)";
+        // Insere os dados no banco de dados, incluindo a descrição
+        $sql = "INSERT INTO tblUsuario (usuNome, usuEmail, usuSenha, usuDataNascimento, usuDataCadastro, usuImagem, usuDescricao) 
+                VALUES (:nome, :email, :senha, :dataNascimento, NOW(), :imagem, :descricao)";
         $stmt = $conexao->prepare($sql);
 
         // Faz o bind dos valores
@@ -50,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':senha', $senha, PDO::PARAM_STR);
         $stmt->bindParam(':dataNascimento', $dataNascimento, PDO::PARAM_STR);
         $stmt->bindParam(':imagem', $imagemNome, PDO::PARAM_STR);
-        $stmt->bindParam(':categoria', $categoria, PDO::PARAM_STR); // Salva a categoria
+        $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR); // Bind da descrição
 
         if ($stmt->execute()) {
             echo "Cadastro realizado com sucesso!";
@@ -62,7 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
   <div class="container">
     <div class="formImage">
-      <img src="undraw_Teacher_re_sico.png" alt="TENTE NOVAMENTE!">
+      <img src="undraw_Teacher_re_sico(2).png" alt="TENTE NOVAMENTE!">
     </div>
 
     <div class="form">
@@ -109,23 +109,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
 
           <div class="inputBox">
+            <label for="descricao">Descrição:</label>
+            <input id="descricao" placeholder="Digite uma breve descrição sobre você" name="usuDescricao" rows="4" required>
+          </div>
+
+          <div class="inputBox">
             <label for="imagem">Imagem</label>
             <input type="file" name="imagem" id="imagem" required> <!-- Tornar obrigatório -->
           </div>
-          <div class="inputBox">
-  <label for="categoria">Categoria:</label>
-  <select id="categoria" name="categoria" required>
-    <?php foreach ($tags as $tag): ?>
-      <option value="<?php echo htmlspecialchars($tag['tagNome']); ?>">
-        <?php echo htmlspecialchars($tag['tagNome']); ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
-</div>
-
-
         </div>
+
         <?php echo $gmail; ?>
+        
         <div class="py-1">
           <div class="loginButton">
             <button><a href="index.php">Já possui conta? Entre</a></button>
@@ -139,189 +134,328 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 </body>
+</html>
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+@import url('https://fonts.cdnfonts.com/css/falling-sky');
 
-  body {
-    background: rgb(138, 87, 55);
-    background: linear-gradient(90deg, rgba(138, 87, 55, 1) 40%, rgba(89, 45, 29, 1) 100%);
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #212529;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 80%;
+  height: 80vh;
+  display: flex;
+  border-radius: 10px;
+}
+
+.formImage {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2b3035;
+  padding: 1rem;
+}
+
+.formImage img {
+  width: 40rem;
+}
+
+.form {
+  width: 50%;
+display: flex;
+  justify-content: center;
+  align-items: left;
+  flex-direction: column;
+  background-color: #343A40;
+  padding: 3rem;
+}
+
+.form input {
+  margin: 0.5rem 0;
+}
+
+.form textarea {
+  margin: 0.5rem 0;
+}
+
+.form button {
+  margin: 0.3rem 0;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  font-family: 'Falling Sky', sans-serif;   
+  color: #FFFFFF;
+}
+
+.title h1 {
+  font-size: 2rem;
+} 
+
+.loginButton button {
+  width: 100%;
+  border: 1px solid #000000;
+  background-color: #212529;
+  padding: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'Falling Sky', sans-serif;                                                
+}
+
+.confirmButton button {
+  width: 100%;
+  border: 1px solid black;
+  background-color: #212529;
+  color: #FFFFFF;
+  padding: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'Falling Sky', sans-serif;                                              
+  cursor: pointer;
+}
+
+.loginButton a {
+  text-decoration: none;
+  font-weight: 10px;
+  color: #FFFFFF;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+}
+
+.inputGroup label {
+  font-size: 20px;
+  color: #FFFFFF;
+  font-family: 'Bree Serif', sans-serif;
+}
+
+.inputBox input {
+  margin: 1px;
+  padding: 1px;
+  border-radius: 5px;
+  height: 35px;
+}
+
+.inputBox ::placeholder {
+  font-family: 'Bree Serif', sans-serif;
+  font-size: 15px;
+}
+
+.inputBox input:focus-visible {
+  border: 1px solid #090d0a;
+  border-radius: 3px;
+  outline: none;
+}
+
+.buttonContainer {
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 1255px) {
+  .formImage {
+    display: none;
   }
 
   .container {
-    width: 80%;
-    height: 80vh;
-    display: flex;
-    border-radius: 10px;
-  }
-
-  .formImage {
     width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f2edeb;
-    padding: 1rem;
-  }
-
-  .formImage img {
-    width: 31rem;
   }
 
   .form {
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: left;
-    flex-direction: column;
-    background-color: #e9dcd5;
-    padding: 3rem;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 1064px) {
+  .container {
+    height: 90%;
+    width: 90%; 
+}
+
+ .inputGroup {
+    flex-direction: column; 
+}
+
+  .title p{
+margin-top: 60px;
+font-size: 2rem;
+}
+
+.buttonContainer{
+  margin: 1rem;
+}
+}
+
+
+@media screen and (max-width: 1024px) {
+  .container {
+      flex-direction: column; 
+      height: 85%; 
   }
 
-  .form input,
-  .form textarea,
-  .form button {
-    margin: 0.5rem 0;
+  .formImage {
+      width: 100%; 
+      display: none; 
   }
 
-  .title {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    font-family: 'Medula One', sans-serif;
-    color: #592D1D;
+  .form {
+      width: 100%; 
+      padding: 2rem; 
   }
 
   .title h1 {
-    font-size: 60px;
+      font-size: 3.5rem; 
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .container {
+      flex-direction: column; 
+      height: 85%; 
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .container{
+      width: 85%;
+      height: 87%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
   }
 
-  .loginButton button {
-    width: 100%;
-    justify-content: 'center';
-    align-items: 'center';
-    border: 1px solid black;
-    background-color: #BF9673;
-    color: #592D1D;
-    padding: 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 20px;
-    font-family: 'labor-union', sans-serif;
-  }
-
-  .confirmButton button {
-    width: 100%;
-    border: 1px solid black;
-    margin-bottom: 30px;
-    background-color: #BF9673;
-    padding: 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 20px;
-    font-family: 'labor-union';
-    cursor: pointer;
-  }
-
-  .confirmButton button a {
-    text-decoration: none;
-    font-weight: 10px;
-    color: #592D1D;
-  }
-
-  .confirmButton button:hover {
-    background-color: #f2edeb;
-    color: #8c9538;
-    transition: 0.5s;
-  }
-
-  .loginButton button:hover {
-    background-color: #f2edeb;
-    color: #592D1D;
-    transition: 0.5s;
-  }
-
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-family: 'labor-union', sans-serif;
-  }
-
-  .inputBox {
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-  }
-
-  .inputGroup label {
-    font-size: 20px;
-    color: #592D1D;
-  }
-
-  .inputBox input {
-    margin: 1px;
-    padding: 1px;
-    border: 1px solid '#090d0a';
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px '#090d0a';
-    height: 35px;
-  }
-
-  .inputBox::placeholder {
-    font-family: 'labor-union';
-    font-size: 15px;
-    color: '#090d0a';
-  }
-
-  .inputBox input:hover {
-    background-color: #f2edeb;
-  }
-
-  .inputBox input:focus-visible {
-    border: 1px solid '#090d0a';
-    border-radius: 3px;
-    outline: none;
-  }
-
-  .buttonContainer {
-    margin-top: 30px;
-  }
-
-  @media screen and (max-width: 1330px) {
-    .formImage {
-      display: none;
-    }
-
-    .container {
-      width: 50%;
-    }
-
-    .form {
+    .inputGroup label,
+    .inputBox input {
       width: 100%;
-    }
-  }
-
-  @media screen and (max-width: 1064px) {
-    .container {
-      height: auto;
-      width: 90%;
+        height: 100%; 
     }
 
-    .inputGroup {
-      flex-direction: column;
-      padding: 2rem;
+    .loginButton button,
+    .confirmButton button {
+        font-size: 1.2rem; 
     }
+    
+    .form{
+      height: 100%;
+    }
+
+    .title h1 {
+        font-size: 3.2rem;
+    }
+  
+    .confirmButton button, .loginButton button{
+      max-height: 80%;
+    }
+}
+
+@media screen and (max-width: 575px){
+  .container{
+    width: 87%;
+    height: 83%;
   }
+  
+  .title {
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .form {
+    width: 100%;
+  }
+  
+  .inputBox {
+    max-width: 110%;
+  }
+}
+
+@media screen and (max-height: 896px){
+  .container {
+    width: 90%;
+    height: 65%;
+  }
+
+  .inputGroup label,
+    .inputBox input {
+      width: 100%;
+        height: 100%; 
+    }
+
+    .loginButton button,
+    .confirmButton button {
+        font-size: 1.2rem; 
+    }
+    
+    .form{
+      height: 100%;
+    }
+
+    .title h1 {
+        font-size: 3.2rem;
+    }
+  
+    .confirmButton button, .loginButton button{
+      max-height: 80%;
+    }
+}
+
+@media screen and (max-height: 932px){
+  .container {
+    width: 90%;
+    height: 65%;
+  }
+
+  .title h1 {
+    font-size: 3rem;
+    margin-top: 0.5rem;
+}
+}
+
+@media screen and (max-height: 740px){
+  .title h1 {
+    font-size: 2.5rem;
+    margin-top: 0.5rem;
+}
+}
+
+@media screen and (max-height: 915px){
+  .container {
+    width: 80%;
+    height: 80%;
+  }
+  
+  .title h1 {
+    font-size: 2.7rem;
+    margin-top: 1rem;
+}
+}
 </style>
 </html>

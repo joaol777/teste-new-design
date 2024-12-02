@@ -14,7 +14,7 @@
 <body>
     <div class="container">
       <div class="formImage">
-	    <img src="undraw_knowledge_re_5v9l.png" alt="TENTE NOVAMENTE!">
+	    <img src="undraw_Studying_re_deca (2).png" alt="TENTE NOVAMENTE!">
 	  </div>
 	  
 	  <div class="form">
@@ -67,172 +67,158 @@
 		
 	</div>
 </body>
-<style>
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<style>@import url('https://fonts.cdnfonts.com/css/falling-sky');
 
-body{
-   background: rgb(138, 87, 55);
-   background: linear-gradient(90deg, rgba(138, 87, 55, 1) 40%, rgba(89, 45, 29, 1) 100%);
-   width: 100%;
-   height: 100vh;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-
-.container{
-	width: 80%;
-    height: 80vh;
-    display: flex;
-    border-radius: 10px;
-}
-
-.formImage {
-	width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f2edeb;
-    padding: 1rem;
-}
-
-.formImage img {
-    width: 28rem;
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color:  #212529;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      width: 80%;
+	    height: 80vh;
+	    display: flex;
+	    border-radius: 10px;
+    }
+    
+    .formImage {
+	   width: 50%;
+	   display: flex;
+	   justify-content: center;
+	   align-items: center;
+	   background-color: #2b3035;
+	   padding: 1rem;
   }
 
-.form {
+  .formImage img {
+	width: 40rem;
+  }
+
+  .form {
 	width: 50%;
 	display: flex;
 	justify-content: center;
 	align-items: left;
 	flex-direction: column;
-	background-color: #e9dcd5;
-    padding: 3rem;
-}
-
-.title{
-	margin-top: 30px;
+	background-color: #343A40;
+	padding: 3rem;
+  }
+  
+    .title {
 	display: flex;
 	justify-content: center;
-	align-items: start;
-    font-family: 'Medula One', sans-serif;
-	color: #592D1D;
+  margin-top: 30px;
+	font-family: 'Falling Sky', sans-serif;  
+	color: #FFFFFF;
   }
-
-  .title h1 {
-    font-size: 60px;
-  } 
   
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-family: 'labor-union', sans-serif;
-  	margin-bottom: 20px;
+   .title h1 {
+    font-size: 2rem;
   }
 
+.inputGroup {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: bold;
+  font-family: 'Bree Serif', sans-serif;
+  }
+  
   .inputGroup label {
-    font-size: 25px;
-    color: #592D1D;
+	font-size: 20px;
+	color: #FFFFFF;
+	font-family: 'Bree Serif', sans-serif;
   }
 
   .inputBox {
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
   }
-
-  .inputBox input {
-    margin: 1px;
-    padding: 1px;
-    border: 1px solid '#090d0a';
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px '#090d0a';
-    height: 35px;
+  
+   .inputBox input {
+	margin: 1px;
+	padding: 1px;
+	border: 1px solid #090d0a;
+	border-radius: 5px;
+	box-shadow: 1px 1px 5px #090d0a;
+	height: 35px;
   }
 
   .inputBox::placeholder {
-    font-family: 'labor-union';
-    font-size: 15px;
-    color: '#090d0a';
+  font-family: 'Bree Serif', sans-serif;
+  font-size: 15px;
+	color: #090d0a;
   }
 
   .inputBox input:hover {
-    background-color: #f2edeb;
+	background-color: #f2edeb;
   }
-  
+
   .inputBox input:focus-visible {
-    border: 1px solid '#090d0a';
-    border-radius: 3px;
-    outline: none;
+	border: 1px solid '#090d0a';
+	border-radius: 3px;
+	outline: none;
   }
   
   .registerButton button {
-    width: 100%;
-    margin: 1px;
-    border: 1px solid black;
-    background-color: #BF9673;
-    color: #592D1D;
-    padding: 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 3px;
-    font-size: 20px;
-    font-family: 'labor-union', sans-serif;
+	width: 100%;
+	margin: 1px;
+	border: 1px solid #000000;
+	background-color: #212529;
+	color: #FFFFFF;
+	padding: 1px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 3px;
+	font-size: 20px;
+	font-family: 'Falling Sky', sans-serif;  										  
   }
-  
+
   .confirmButton button {
-    width: 100%;
-    margin: 1px;
-    border: 1px solid black;
-    background-color: #BF9673;
-    color: #592D1D;
-    padding: 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 5px;
-    font-size: 20px;
-    font-family: 'labor-union', sans-serif;
-    cursor: pointer;
-  }
-  
-   .confirmButton button a {
-    text-decoration: none;
-    font-weight: 10px;
-    color:#592D1D;
+	width: 100%;
+	margin: 1px;
+  border: 1px solid #000000;
+  background-color: #212529;
+  color: #FFFFFF;
+	padding: 1px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 5px;
+	font-size: 20px;
+  font-family: 'Falling Sky', sans-serif;  							  
   }
 
-  .confirmButton button:hover {
-    background-color: #f2edeb;
-    color:#592D1D;
-    transition: 0.5s;
+  .confirmButton button a {
+	text-decoration: none;
+	font-weight: 10px;
+	color:#FFFFFF;
   }
-  
+
   .registerButton button a {
-    text-decoration: none;
-    font-weight: 10px;
-    color:#592D1D;
+	text-decoration: none;
+	font-weight: 10px;
+	color: #FFFFFF;
   }
 
-  .registerButton button:hover {
-    background-color: #f2edeb;
-    color: #bf9673;
-    transition: 0.5s;
-  }
-  
-  
-  .forgotPasswordLink a{
-  margin: 1px;
-  padding: 1px;
-  margin-bottom: 20px;
-  text-decoration: none;
-  color: #592D1D;
-  font-weight: 10px;
-  font-size: 20px;
+  .forgotPasswordLink a {
+	margin: 1px;
+	padding: 1px;
+	margin-bottom: 30px;
+	text-decoration: none;
+  color: #FFFFFF;
+	font-size: 20px;
+	font-weight: bold;
   }
 
   @media screen and (max-width: 1330px) {
@@ -246,24 +232,27 @@ body{
 
     .form {
       width: 100%;
+      height: 100%;
     }
   }
 
 @media screen and (max-width: 1064px) {
     .container {
-        height: auto;
-        width: 90%; 
+        height: 70%;
+        width: 65%; 
     }
 
     .inputGroup {
         flex-direction: column; 
-        padding: 2rem; 
     }
 	
-	.title a{
-	margin-top: 60px;
+	.title p{
 	font-size: 2rem;
 	}
+    
+    .forgotPasswordLink a{
+        font-size: 1.2rem;
+    }
 }
 
 
@@ -284,38 +273,69 @@ body{
     }
 
     .title h1 {
-        font-size: 2rem; 
+        font-size: 3.5rem; 
     }
 }
 
 
 @media screen and (max-width: 768px) {
-    .inputGroup label,
+  .container{
+      width: 100%;
+      height: 75%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+      .inputGroup label,
     .inputBox input {
-        font-size: 1rem; 
-        margin-top: 10px; 
+        font-size: 1.2rem; 
+        width: 100%; 
     }
 
-    .registerButton a,
+    .loginButton button,
     .confirmButton button {
-        font-size: 1rem; 
-        padding: 0.75rem; 
+        font-size: 1.5rem; 
+    }
+    
+    .form{
+      height: 100%;
     }
 
     .title h1 {
-        font-size: 1.5rem;
+        font-size: 3rem;
     }
 
     .forgotPasswordLink a {
         font-size: 1rem;
+        margin-bottom: 1rem ;
     }
-
-    .inputGroup {
-        margin-bottom: 2rem;
+  
+    .confirmButton button, .loginButton button{
+      max-height: 80%;
     }
 }
 
-
-
+@media screen and (max-width: 575px){
+   .container{
+     width: 85%;
+   }
+   
+   .title {
+     font-size: 2.5rem;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+   }
+   
+   .form {
+     width: 100%;
+    
+   }
+   
+   .inputBox {
+     max-width: 110%;
+   }
+}
 </style>
 </html>
